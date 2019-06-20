@@ -28,10 +28,12 @@
 #include "precompiled.h"
 #include "TextureDatabase.h"
 #include "TextureResource.h"
-#include <Rocket/Core.h>
+#include "../../Include/Rocket/Core.h"
 
 namespace Rocket {
 namespace Core {
+
+#define instance texdb_instance
 
 static TextureDatabase* instance = NULL;
 
@@ -112,6 +114,8 @@ void TextureDatabase::ReleaseTextures(RenderInterface* render_interface)
 			i->second->Release(render_interface);
 	}
 }
+
+#undef instance
 
 }
 }

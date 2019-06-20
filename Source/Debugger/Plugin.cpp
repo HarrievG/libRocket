@@ -14,7 +14,7 @@
  *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,9 +27,8 @@
 
 
 #include "Plugin.h"
-#include <Rocket/Core/Types.h>
-#include <Rocket/Core.h>
-#include <Rocket/Core/FontDatabase.h>
+#include "../../Include/Rocket/Core/Types.h"
+#include "../../Include/Rocket/Core.h"
 #include "ElementContextHook.h"
 #include "ElementInfo.h"
 #include "ElementLog.h"
@@ -37,7 +36,7 @@
 #include "Geometry.h"
 #include "MenuSource.h"
 #include "SystemInterface.h"
-#include <Rocket/Core/ContainerWrapper.h>
+#include <stack>
 
 namespace Rocket {
 namespace Debugger {
@@ -169,7 +168,7 @@ void Plugin::Render()
 			if (document->GetId().Find("rkt-debug-") == 0)
 				continue;
 
-			Rocket::Core::Container::stack< Core::Element* >::Type element_stack;
+			std::stack< Core::Element* > element_stack;
 			element_stack.push(document);
 
 			while (!element_stack.empty())
@@ -288,10 +287,10 @@ Plugin* Plugin::GetInstance()
 
 bool Plugin::LoadFont()
 {
-	return (Core::FontDatabase::LoadFontFace(Core::FontDatabase::FREETYPE_FONT, lacuna_regular_freetype, sizeof(lacuna_regular_freetype) / sizeof(unsigned char), "Lacuna", Core::Font::STYLE_NORMAL, Core::Font::WEIGHT_NORMAL) &&
-			Core::FontDatabase::LoadFontFace(Core::FontDatabase::FREETYPE_FONT, lacuna_italic_freetype, sizeof(lacuna_italic_freetype) / sizeof(unsigned char), "Lacuna", Core::Font::STYLE_ITALIC, Core::Font::WEIGHT_NORMAL))
-		|| (Core::FontDatabase::LoadFontFace(Core::FontDatabase::BITMAP_FONT, lacuna_regular_bitmap_font, sizeof(lacuna_regular_bitmap_font) / sizeof(unsigned char), "../../assets/BitmapFont/lacuna", Core::Font::STYLE_NORMAL, Core::Font::WEIGHT_NORMAL) &&
-			Core::FontDatabase::LoadFontFace(Core::FontDatabase::BITMAP_FONT, lacuna_italic_bitmap_font, sizeof(lacuna_italic_bitmap_font) / sizeof(unsigned char), "../../assets/BitmapFont/lacuna", Core::Font::STYLE_ITALIC, Core::Font::WEIGHT_NORMAL));
+	return (Core::FontDatabase::LoadFontFace(Core::FontDatabase::FreeType, lacuna_regular_freetype, sizeof(lacuna_regular_freetype) / sizeof(unsigned char), "Lacuna", Core::Font::STYLE_NORMAL, Core::Font::WEIGHT_NORMAL) &&
+			Core::FontDatabase::LoadFontFace(Core::FontDatabase::FreeType, lacuna_italic_freetype, sizeof(lacuna_italic_freetype) / sizeof(unsigned char), "Lacuna", Core::Font::STYLE_ITALIC, Core::Font::WEIGHT_NORMAL))
+		|| (Core::FontDatabase::LoadFontFace(Core::FontDatabase::BitmapFont, lacuna_regular_bitmap_font, sizeof(lacuna_regular_bitmap_font) / sizeof(unsigned char), "../../assets/BitmapFont/lacuna", Core::Font::STYLE_NORMAL, Core::Font::WEIGHT_NORMAL) &&
+			Core::FontDatabase::LoadFontFace(Core::FontDatabase::BitmapFont, lacuna_italic_bitmap_font, sizeof(lacuna_italic_bitmap_font) / sizeof(unsigned char), "../../assets/BitmapFont/lacuna", Core::Font::STYLE_ITALIC, Core::Font::WEIGHT_NORMAL));
 }
 
 bool Plugin::LoadMenuElement()

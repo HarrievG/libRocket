@@ -27,10 +27,12 @@
 
 #include "precompiled.h"
 #include "EventDispatcher.h"
-#include <Rocket/Core/Element.h>
-#include <Rocket/Core/Event.h>
-#include <Rocket/Core/EventListener.h>
-#include <Rocket/Core/Factory.h>
+#include "../../Include/Rocket/Core/Element.h"
+#include "../../Include/Rocket/Core/Event.h"
+#include "../../Include/Rocket/Core/EventListener.h"
+#include "../../Include/Rocket/Core/Factory.h"
+#include <vector>
+
 
 namespace Rocket {
 namespace Core {
@@ -60,7 +62,7 @@ void EventDispatcher::AttachEvent(const String& type, EventListener* listener, b
 	// Ensure the event is in the event list
 	if (event_itr == events.end())
 	{
-		event_itr = events.insert(Container::pair< String, Listeners >::Type(type, Listeners())).first;
+		event_itr = events.insert(std::pair< String, Listeners >(type, Listeners())).first;
 	}
 
 	// Add the action to the events
@@ -118,7 +120,7 @@ bool EventDispatcher::DispatchEvent(Element* target_element, const String& name,
 		return false;
 
 	// Build the element traversal from the tree
-	typedef Container::vector<Element*>::Type Elements;
+	typedef std::vector<Element*> Elements;
 	Elements elements;
 
 	Element* walk_element = target_element->GetParentNode();
@@ -131,7 +133,7 @@ bool EventDispatcher::DispatchEvent(Element* target_element, const String& name,
 	event->SetPhase(Event::PHASE_CAPTURE);
 	// Capture phase - root, to target (only events that have registered as capture events)
 	// Note: We walk elements in REVERSE as they're placed in the list from the elements parent to the root
-	for (int i = elements.size() - 1; i >= 0 && event->IsPropagating(); i--) 
+	for (int i = (int)elements.size() - 1; i >= 0 && event->IsPropagating(); i--) 
 	{
 		EventDispatcher* dispatcher = elements[i]->GetEventDispatcher();
 		event->SetCurrentElement(elements[i]);

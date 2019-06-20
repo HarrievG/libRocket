@@ -25,17 +25,19 @@
  *
  */
 
-#include <Rocket/Controls/ElementDataGridRow.h>
-#include <Rocket/Core.h>
-#include <Rocket/Controls/DataSource.h>
-#include <Rocket/Controls/DataFormatter.h>
-#include <Rocket/Controls/ElementDataGrid.h>
-#include <Rocket/Controls/ElementDataGridCell.h>
+#include "../../Include/Rocket/Controls/ElementDataGridRow.h"
+#include "../../Include/Rocket/Core.h"
+#include "../../Include/Rocket/Controls/DataSource.h"
+#include "../../Include/Rocket/Controls/DataFormatter.h"
+#include "../../Include/Rocket/Controls/ElementDataGrid.h"
+#include "../../Include/Rocket/Controls/ElementDataGridCell.h"
 
 namespace Rocket {
 namespace Controls {
 
 const float MAX_UPDATE_TIME = 0.01f;
+
+ROCKET_RTTI_Implement( ElementDataGridRow )
 
 ElementDataGridRow::ElementDataGridRow(const Rocket::Core::String& tag) : Core::Element(tag)
 {
@@ -61,6 +63,7 @@ ElementDataGridRow::~ElementDataGridRow()
 	if (data_source)
 	{
 		data_source->DetachListener(this);
+		data_source = NULL;
 	}
 }
 
@@ -81,7 +84,7 @@ void ElementDataGridRow::Initialise(ElementDataGrid* _parent_grid, ElementDataGr
 	Rocket::Core::XMLAttributes cell_attributes;
 	for (int i = 0; i < num_columns; i++)
 	{
-		ElementDataGridCell* cell = dynamic_cast< ElementDataGridCell* >(Core::Factory::InstanceElement(this, "#rktctl_datagridcell", "datagridcell", cell_attributes));
+		ElementDataGridCell* cell = rocket_dynamic_cast< ElementDataGridCell* >(Core::Factory::InstanceElement(this, "#rktctl_datagridcell", "datagridcell", cell_attributes));
 		cell->Initialise(i, header_row->GetChild(i));
 		cell->SetProperty("display", Rocket::Core::Property(Rocket::Core::DISPLAY_INLINE_BLOCK, Rocket::Core::Property::KEYWORD));
 		AppendChild(cell);
@@ -109,8 +112,11 @@ int ElementDataGridRow::GetDepth()
 
 void ElementDataGridRow::SetDataSource(const Rocket::Core::String& data_source_name)
 {
-	if (data_source)
+	if (data_source != NULL)
+	{
 		data_source->DetachListener(this);
+		data_source = NULL;
+	}
 
 	if (ParseDataSource(data_source, data_table, data_source_name))
 	{
@@ -245,11 +251,13 @@ ElementDataGrid* ElementDataGridRow::GetParentGrid()
 	return parent_grid;
 }
 
-void ElementDataGridRow::OnDataSourceDestroy(DataSource* ROCKET_UNUSED(_data_source))
+void ElementDataGridRow::OnDataSourceDestroy(DataSource* ROCKET_UNUSED_PARAMETER(_data_source))
 {
-	data_source->DetachListener(this);
-	data_source = NULL;
-
+	if(data_source != NULL)
+	{
+		data_source->DetachListener(this);
+		data_source = NULL;
+	}
 	RemoveChildren();
 }
 
@@ -284,7 +292,7 @@ void ElementDataGridRow::RefreshRows()
 	RemoveChildren();
 
 	// Load the children from the data source.
-	if (data_source)
+	if (data_source != NULL)
 	{
 		int num_rows = data_source->GetNumRows(data_table);
 		if (num_rows > 0)
@@ -368,7 +376,7 @@ void ElementDataGridRow::AddChildren(int first_row_added, int num_rows_added)
 
 	// We need to make a row for each new child, then pass through the cell
 	// information and the child's data source (if one exists.)
-	if (data_source)
+	if (data_source != NULL)
 	{
 		for (int i = 0; i < num_rows_added; i++)
 		{
@@ -571,7 +579,7 @@ void ElementDataGridRow::LoadChildren(float time_slice)
 			any_dirty_children = true;
 			if (data_query_offset == -1)
 			{
-				data_query_offset = i;
+				data_query_offset = (int)i;
 				data_query_limit = 1;
 			}
 			else

@@ -25,10 +25,12 @@
  *
  */
 
-#include <Rocket/Controls/ElementFormControl.h>
+#include "../../Include/Rocket/Controls/ElementFormControl.h"
 
 namespace Rocket {
 namespace Controls {
+
+ROCKET_RTTI_Implement( ElementFormControl )
 
 ElementFormControl::ElementFormControl(const Rocket::Core::String& tag) : Core::Element(tag)
 {

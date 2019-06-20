@@ -28,9 +28,9 @@
 #ifndef ROCKETCORETEXTURERESOURCE_H
 #define ROCKETCORETEXTURERESOURCE_H
 
-#include <Rocket/Core/ReferenceCountable.h>
-#include <Rocket/Core/ContainerWrapper.h>
-#include <Rocket/Core/Texture.h>
+#include "../../Include/Rocket/Core/ReferenceCountable.h"
+#include "../../Include/Rocket/Core/Texture.h"
+#include <map>
 
 namespace Rocket {
 namespace Core {
@@ -77,8 +77,8 @@ private:
 
 	String source;
 
-	typedef Container::pair< TextureHandle, Vector2i >::Type TextureData;
-	typedef Container::map< RenderInterface*, TextureData >::Type TextureDataMap;
+	typedef std::pair< TextureHandle, Vector2i > TextureData;
+	typedef std::map< RenderInterface*, TextureData > TextureDataMap;
 	mutable TextureDataMap texture_data;
 };
 

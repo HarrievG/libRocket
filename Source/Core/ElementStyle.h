@@ -29,7 +29,7 @@
 #define ROCKETCOREELEMENTSTYLE_H
 
 #include "ElementDefinition.h"
-#include <Rocket/Core/Types.h>
+#include "../../Include/Rocket/Core/Types.h"
 
 namespace Rocket {
 namespace Core {
@@ -77,7 +77,7 @@ public:
 	/// @return True if the class is set on the element, false otherwise.
 	inline bool IsClassSet(const String& class_name) const
 	{
-		return classes.size() && Container::find(classes.begin(), classes.end(), class_name) != classes.end();
+		return classes.size() && std::find(classes.begin(), classes.end(), class_name) != classes.end();
 	}
 	/// Specifies the entire list of classes for this element. This will replace any others specified.
 	/// @param[in] class_names The list of class names to set on the style, separated by spaces.
@@ -143,7 +143,11 @@ public:
 	void DirtyEmProperties();
 	// Dirties font-size on child elements if appropriate.
 	void DirtyInheritedEmProperties();
+	// Dirties rem properties.
+	void DirtyRemProperties();
 
+	/// Returns 'top', 'bottom', 'left' and 'right' properties from element's style or local cache.
+	void GetOffsetProperties(const Property **top, const Property **bottom, const Property **left, const Property **right );	
 	/// Returns 'border-width' properties from element's style or local cache.
 	void GetBorderWidthProperties(const Property **border_top_width, const Property **border_bottom_width, const Property **border_left_width, const Property **border_right_width);
 	/// Returns 'margin' properties from element's style or local cache.

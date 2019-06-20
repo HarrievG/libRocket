@@ -27,7 +27,7 @@
 
 #include "precompiled.h"
 #include "StyleSheetFactory.h"
-#include <Rocket/Core/StyleSheet.h>
+#include "../../Include/Rocket/Core/StyleSheet.h"
 #include "StreamFile.h"
 #include "StyleSheetNodeSelectorNthChild.h"
 #include "StyleSheetNodeSelectorNthLastChild.h"
@@ -40,10 +40,12 @@
 #include "StyleSheetNodeSelectorOnlyChild.h"
 #include "StyleSheetNodeSelectorOnlyOfType.h"
 #include "StyleSheetNodeSelectorEmpty.h"
-#include <Rocket/Core/Log.h>
+#include "../../Include/Rocket/Core/Log.h"
 
 namespace Rocket {
 namespace Core {
+
+#define instance factory_instance
 
 static StyleSheetFactory* instance = NULL;
 
@@ -215,6 +217,8 @@ StyleSheet* StyleSheetFactory::LoadStyleSheet(const String& sheet)
 	stream->RemoveReference();
 	return new_style_sheet;
 }
+
+#undef instance
 
 }
 }

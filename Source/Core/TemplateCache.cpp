@@ -29,10 +29,12 @@
 #include "TemplateCache.h"
 #include "StreamFile.h"
 #include "Template.h"
-#include <Rocket/Core/Log.h>
+#include "../../Include/Rocket/Core/Log.h"
 
 namespace Rocket {
 namespace Core {
+
+#define instance temp_instance
 
 static TemplateCache* instance = NULL;
 
@@ -113,6 +115,17 @@ Template* TemplateCache::GetTemplate(const String& name)
 
 	return NULL;
 }
+
+void TemplateCache::Clear()
+{
+	for (Templates::iterator i = instance->templates.begin(); i != instance->templates.end(); ++i)
+		delete (*i).second;
+
+	instance->templates.clear();
+	instance->template_ids.clear();
+}
+
+#undef instance
 
 }
 }

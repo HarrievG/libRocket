@@ -27,13 +27,12 @@
 
 #include "precompiled.h"
 #include "StyleSheetParser.h"
-#include <Rocket/Core/ContainerWrapper.h>
 #include "StyleSheetFactory.h"
 #include "StyleSheetNode.h"
-#include <Rocket/Core/Log.h>
-#include <Rocket/Core/StreamMemory.h>
-#include <Rocket/Core/StyleSheet.h>
-#include <Rocket/Core/StyleSheetSpecification.h>
+#include "../../Include/Rocket/Core/Log.h"
+#include "../../Include/Rocket/Core/StreamMemory.h"
+#include "../../Include/Rocket/Core/StyleSheet.h"
+#include "../../Include/Rocket/Core/StyleSheetSpecification.h"
 
 namespace Rocket {
 namespace Core {
@@ -95,7 +94,7 @@ bool StyleSheetParser::ParseProperties(PropertyDictionary& parsed_properties, co
 
 bool StyleSheetParser::ReadProperties(PropertyDictionary& properties)
 {
-	int rule_line_number = line_number;
+	int rule_line_number = (int)line_number;
 	String name;
 	String value;
 
@@ -242,9 +241,9 @@ bool StyleSheetParser::ImportProperties(StyleSheetNode* node, const String& name
 
 		// Sort the classes and pseudo-classes so they are consistent across equivalent declarations that shuffle the
 		// order around.
-		Rocket::Core::Container::sort(classes.begin(), classes.end());
-		Rocket::Core::Container::sort(pseudo_classes.begin(), pseudo_classes.end());
-		Rocket::Core::Container::sort(structural_pseudo_classes.begin(), structural_pseudo_classes.end());
+		std::sort(classes.begin(), classes.end());
+		std::sort(pseudo_classes.begin(), pseudo_classes.end());
+		std::sort(structural_pseudo_classes.begin(), structural_pseudo_classes.end());
 
 		// Get the named child node.
 		leaf_node = leaf_node->GetChildNode(tag, StyleSheetNode::TAG);

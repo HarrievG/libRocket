@@ -29,13 +29,14 @@
 #include "ElementTextDefault.h"
 #include "ElementDefinition.h"
 #include "ElementStyle.h"
-#include <Rocket/Core/FontFaceHandle.h>
-#include <Rocket/Core/ElementDocument.h>
-#include <Rocket/Core/ElementUtilities.h>
-#include <Rocket/Core/Event.h>
-#include <Rocket/Core/FontDatabase.h>
-#include <Rocket/Core/Property.h>
-#include <Rocket/Core/StyleSheetKeywords.h>
+#include "FontFaceHandle.h"
+#include "../../Include/Rocket/Core/ElementDocument.h"
+#include "../../Include/Rocket/Core/ElementUtilities.h"
+#include "../../Include/Rocket/Core/Event.h"
+#include "../../Include/Rocket/Core/FontDatabase.h"
+#include "../../Include/Rocket/Core/Property.h"
+#include "../../Include/Rocket/Core/StyleSheetKeywords.h"
+#include <vector>
 
 namespace Rocket {
 namespace Core {
@@ -227,7 +228,7 @@ bool ElementTextDefault::GenerateLine(WString& line, int& line_length, float& li
 		// The token can fit on the end of the line, so add it onto the end and increment our width and length
 		// counters.
 		line += token;
-		line_length += (next_token_begin - token_begin);
+		line_length += (int)(next_token_begin - token_begin);
 		line_width += token_width;
 
 		// Break out of the loop if an endline was forced.
@@ -355,7 +356,7 @@ void ElementTextDefault::OnPropertyChange(const PropertyNameList& changed_proper
 		geometry_dirty = true;
 
 		// Re-colour the decoration geometry.
-		Container::vector< Vertex >::Type& vertices = decoration.GetVertices();
+		std::vector< Vertex >& vertices = decoration.GetVertices();
 		for (size_t i = 0; i < vertices.size(); ++i)
 			vertices[i].colour = colour;
 

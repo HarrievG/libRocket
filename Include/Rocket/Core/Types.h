@@ -33,12 +33,15 @@
 #define NULL 0
 #endif
 
-#include <Rocket/Core/Platform.h>
-#include <Rocket/Core/Debug.h>
-#include <Rocket/Core/ContainerWrapper.h>
-
 #include <float.h>
 #include <limits.h>
+#include <string>
+#include <map>
+#include <set>
+#include <vector>
+
+#include "Platform.h"
+#include "Debug.h"
 
 namespace Rocket {
 namespace Core {
@@ -60,9 +63,9 @@ typedef unsigned __int64 uint64_t;
 #include <inttypes.h>
 #endif
 
-#include <Rocket/Core/Colour.h>
-#include <Rocket/Core/Vector2.h>
-#include <Rocket/Core/String.h>
+#include "../Core/Colour.h"
+#include "../Core/Vector2.h"
+#include "../Core/StringFunc.h"
 
 namespace Rocket {
 namespace Core {
@@ -84,10 +87,10 @@ typedef uintptr_t CompiledGeometryHandle;
 typedef uintptr_t DecoratorDataHandle;
 
 // List of elements.
-typedef Container::vector< Element* >::Type ElementList;
-typedef Container::set< String >::Type PseudoClassList;
-typedef Container::set< String >::Type PropertyNameList;
-typedef Container::set< String >::Type AttributeNameList;
+typedef std::vector< Element* > ElementList;
+typedef std::set< String > PseudoClassList;
+typedef std::set< String > PropertyNameList;
+typedef std::set< String > AttributeNameList;
 typedef Dictionary ElementAttributes;
 
 }

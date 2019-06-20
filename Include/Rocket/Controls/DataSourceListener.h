@@ -28,8 +28,8 @@
 #ifndef ROCKETCONTROLSDATASOURCELISTENER_H
 #define ROCKETCONTROLSDATASOURCELISTENER_H
 
-#include <Rocket/Controls/Header.h>
-#include <Rocket/Core/String.h>
+#include "Header.h"
+#include "../Core/StringFunc.h"
 
 namespace Rocket {
 namespace Controls {

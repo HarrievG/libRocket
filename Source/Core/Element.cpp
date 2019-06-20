@@ -26,21 +26,23 @@
  */
 
 #include "precompiled.h"
-#include <Rocket/Core/Element.h>
-#include <Rocket/Core/Dictionary.h>
-#include <Rocket/Core/ContainerWrapper.h>
+#include "../../Include/Rocket/Core/Core.h"
+#include "../../Include/Rocket/Core/Element.h"
+#include "../../Include/Rocket/Core/Dictionary.h"
+#include "../Core/FontFaceHandle.h"
 #include "ElementBackground.h"
 #include "ElementBorder.h"
 #include "ElementDefinition.h"
 #include "ElementStyle.h"
 #include "EventDispatcher.h"
 #include "ElementDecoration.h"
-#include <Rocket/Core/FontFaceHandle.h>
 #include "LayoutEngine.h"
 #include "PluginRegistry.h"
 #include "StyleSheetParser.h"
 #include "XMLParseTools.h"
-#include <Rocket/Core/Core.h>
+#include <algorithm>
+#include <vector>
+
 
 namespace Rocket {
 namespace Core {
@@ -52,7 +54,7 @@ namespace Core {
 class ElementSortZOrder
 {
 public:
-	bool operator()(const Container::pair< Element*, float >::Type& lhs, const Container::pair< Element*, float >::Type& rhs)
+	bool operator()(const std::pair< Element*, float >& lhs, const std::pair< Element*, float >& rhs) const
 	{
 		return lhs.second < rhs.second;
 	}
@@ -65,7 +67,7 @@ public:
 class ElementSortZIndex
 {
 public:
-	bool operator()(const Element* lhs, const Element* rhs)
+	bool operator()(const Element* lhs, const Element* rhs) const
 	{
 		// Check the z-index.
 		return lhs->GetZIndex() < rhs->GetZIndex();
@@ -75,7 +77,7 @@ public:
 ROCKET_RTTI_Implement( Element )
 
 /// Constructs a new libRocket element.
-Element::Element(const String& _tag) : absolute_offset(0, 0), relative_offset_base(0, 0), relative_offset_position(0, 0), scroll_offset(0, 0), content_offset(0, 0), content_box(0, 0), boxes(1)
+Element::Element(const String& _tag) : relative_offset_base(0, 0), relative_offset_position(0, 0), absolute_offset(0, 0), scroll_offset(0, 0), boxes(1), content_offset(0, 0), content_box(0, 0)
 {
 	tag = _tag.ToLower();
 	parent = NULL;
@@ -449,8 +451,10 @@ float Element::GetBaseline() const
 }
 
 // Gets the intrinsic dimensions of this element, if it is of a type that has an inherent size.
-bool Element::GetIntrinsicDimensions(Vector2f& ROCKET_UNUSED(dimensions))
+bool Element::GetIntrinsicDimensions(Vector2f& ROCKET_UNUSED_PARAMETER(dimensions))
 {
+	ROCKET_UNUSED(dimensions);
+
 	return false;
 }
 
@@ -535,6 +539,11 @@ float Element::ResolveProperty(const String& name, float base_value)
 float Element::ResolveProperty(const Property *property, float base_value)
 {
 	return style->ResolveProperty(property, base_value);
+}
+
+void Element::GetOffsetProperties(const Property **top, const Property **bottom, const Property **left, const Property **right )
+{
+	style->GetOffsetProperties(top, bottom, left, right);
 }
 
 void Element::GetBorderWidthProperties(const Property **border_top, const Property **border_bottom, const Property **border_left, const Property **bottom_right)
@@ -790,7 +799,7 @@ float Element::GetClientHeight()
 // Returns the element from which all offset calculations are currently computed.
 Element* Element::GetOffsetParent()
 {
-	return parent;
+	return offset_parent;
 }
 
 // Gets the distance from this element's left border to its offset parent's left border.
@@ -1851,7 +1860,7 @@ void Element::ReleaseElements(ElementList& released_elements)
 
 		// If this element has been added back into our list, then we remove our previous oustanding reference on it
 		// and continue.
-		if (Container::find(children.begin(), children.end(), element) != children.end())
+		if (std::find(children.begin(), children.end(), element) != children.end())
 		{
 			element->RemoveReference();
 			continue;
@@ -1893,7 +1902,7 @@ void Element::UpdateOffset()
 			// If the element is anchored right, then the position is set first so the element's right-most edge
 			// (including margins) will render up against the containing box's right-most content edge, and then
 			// offset by the resolved value.
-			if (right != NULL && right->unit != Property::KEYWORD)
+			else if (right != NULL && right->unit != Property::KEYWORD)
 				relative_offset_base.x = containing_block.x + parent_box.GetEdge(Box::BORDER, Box::LEFT) - (ResolveProperty(RIGHT, containing_block.x) + GetBox().GetSize(Box::BORDER).x + GetBox().GetEdge(Box::MARGIN, Box::RIGHT));
 
 			const Property *top = GetLocalProperty(TOP);
@@ -1950,7 +1959,7 @@ void Element::BuildLocalStackingContext()
 	stacking_context.clear();
 
 	BuildStackingContext(&stacking_context);
-	Rocket::Core::Container::stable_sort(stacking_context.begin(), stacking_context.end(), ElementSortZIndex());
+	std::stable_sort(stacking_context.begin(), stacking_context.end(), ElementSortZIndex());
 }
 
 void Element::BuildStackingContext(ElementList* new_stacking_context)
@@ -1958,7 +1967,7 @@ void Element::BuildStackingContext(ElementList* new_stacking_context)
 	// Build the list of ordered children. Our child list is sorted within the stacking context so stacked elements
 	// will render in the right order; ie, positioned elements will render on top of inline elements, which will render
 	// on top of floated elements, which will render on top of block elements.
-	Container::vector< Container::pair< Element*, float >::Type >::Type ordered_children;
+	std::vector< std::pair< Element*, float > > ordered_children;
 	for (size_t i = 0; i < children.size(); ++i)
 	{
 		Element* child = children[i];
@@ -1966,7 +1975,7 @@ void Element::BuildStackingContext(ElementList* new_stacking_context)
 		if (!child->IsVisible())
 			continue;
 
-		Container::pair< Element*, float >::Type ordered_child;
+		std::pair< Element*, float > ordered_child;
 		ordered_child.first = child;
 
 		if (child->GetPosition() != POSITION_STATIC)
@@ -1982,7 +1991,7 @@ void Element::BuildStackingContext(ElementList* new_stacking_context)
 	}
 
 	// Sort the list!
-	Rocket::Core::Container::stable_sort(ordered_children.begin(), ordered_children.end(), ElementSortZOrder());
+	std::stable_sort(ordered_children.begin(), ordered_children.end(), ElementSortZOrder());
 
 	// Add the list of ordered children into the stacking context in order.
 	for (size_t i = 0; i < ordered_children.size(); ++i)

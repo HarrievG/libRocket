@@ -28,13 +28,15 @@
 #ifndef ROCKETCOREFONTFACELAYER_H
 #define ROCKETCOREFONTFACELAYER_H
 
-#include <Rocket/Core/Header.h>
-#include <Rocket/Core/FontGlyph.h>
-#include <Rocket/Core/Geometry.h>
-#include <Rocket/Core/GeometryUtilities.h>
-#include <Rocket/Core/String.h>
-#include <Rocket/Core/Texture.h>
+#include "../../Include/Rocket/Core/FontGlyph.h"
+#include "../../Include/Rocket/Core/Geometry.h"
+#include "../../Include/Rocket/Core/GeometryUtilities.h"
+#include "../../Include/Rocket/Core/StringFunc.h"
+#include "../../Include/Rocket/Core/Texture.h"
 #include "TextureLayout.h"
+#include <vector>
+#include <map>
+
 
 namespace Rocket {
 namespace Core {
@@ -68,7 +70,7 @@ public:
 	/// @param[out] texture_dimensions The dimensions of the texture.
 	/// @param[in] glyphs The glyphs required by the font face handle.
 	/// @param[in] texture_id The index of the texture within the layer to generate.
-	virtual bool GenerateTexture(const byte*& texture_data, Vector2i& texture_dimensions, int layout_id, int texture_id);
+	virtual bool GenerateTexture(const byte*& texture_data, Vector2i& texture_dimensions, int texture_id);
 	/// Generates the geometry required to render a single character.
 	/// @param[out] geometry An array of geometries this layer will write to. It must be at least as big as the number of textures in this layer.
 	/// @param[in] character_code The character to generate geometry for.
@@ -76,19 +78,20 @@ public:
 	/// @param[in] colour The colour of the string.
 	inline void GenerateGeometry(Geometry* geometry, const word character_code, const Vector2f& position, const Colourb& colour) const
 	{
-		CharacterMap::const_iterator iterator = characters.find(character_code);
-		if (iterator == characters.end())
-			return;
-
-		const Character& character = (*iterator).second;
+		if (character_code >= characters.size())
+			return;		
+		
+		const Character& character = characters[character_code];
+		if (character.texture_index < 0)
+			return;		
 
 		// Generate the geometry for the character.
-		Container::vector< Vertex >::Type& character_vertices = geometry[character.texture_index].GetVertices();
-		Container::vector< int >::Type& character_indices = geometry[character.texture_index].GetIndices();
+		std::vector< Vertex >& character_vertices = geometry[character.texture_index].GetVertices();
+		std::vector< int >& character_indices = geometry[character.texture_index].GetIndices();
 
 		character_vertices.resize(character_vertices.size() + 4);
 		character_indices.resize(character_indices.size() + 6);
-		GeometryUtilities::GenerateQuad(&character_vertices[0] + (character_vertices.size() - 4), &character_indices[0] + (character_indices.size() - 6), Vector2f(position.x + character.origin.x, position.y + character.origin.y), character.dimensions, colour, character.texcoords[0], character.texcoords[1], character_vertices.size() - 4);
+		GeometryUtilities::GenerateQuad(&character_vertices[0] + (character_vertices.size() - 4), &character_indices[0] + (character_indices.size() - 6), Vector2f(position.x + character.origin.x, position.y + character.origin.y), character.dimensions, colour, character.texcoords[0], character.texcoords[1], (int)character_vertices.size() - 4);
 	}
 
 	/// Returns the effect used to generate the layer.
@@ -107,8 +110,6 @@ public:
 	/// @return The layer's colour.
 	const Colourb& GetColour() const;
 
-	bool AddNewGlyphs(void);
-
 // protected:
 	struct Character
 	{
@@ -123,16 +124,15 @@ public:
 		int texture_index;
 	};
 
-	typedef Container::map< word, Character >::Type CharacterMap;
-	typedef Container::vector< Texture >::Type TextureList;
-	typedef Container::vector< TextureLayout* >::Type TextureLayoutList;
+	typedef std::vector< Character > CharacterList;
+	typedef std::vector< Texture > TextureList;
 
 	const FontFaceHandle* handle;
 	FontEffect* effect;
 
-	TextureLayoutList texture_layouts;
+	TextureLayout texture_layout;
 
-	CharacterMap characters;
+	CharacterList characters;
 	TextureList textures;
 	Colourb colour;
 };

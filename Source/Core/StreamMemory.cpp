@@ -26,13 +26,13 @@
  */
 
 #include "precompiled.h"
-#include <Rocket/Core/StreamMemory.h>
+#include "../../Include/Rocket/Core/StreamMemory.h"
 #include <stdio.h>
 
 namespace Rocket {
 namespace Core {
 
-const int DEFAULT_BUFFER_SIZE = 256;
+const int DEFAULT_MEM_BUFFER_SIZE = 256;
 const int BUFFER_INCREMENTS = 256;
 
 StreamMemory::StreamMemory() 
@@ -42,7 +42,7 @@ StreamMemory::StreamMemory()
 	buffer_size = 0;
 	buffer_used = 0;
 	owns_buffer = true;
-	Reallocate(DEFAULT_BUFFER_SIZE);
+	Reallocate(DEFAULT_MEM_BUFFER_SIZE);
 }
 
 StreamMemory::StreamMemory(size_t initial_size)
@@ -74,8 +74,12 @@ StreamMemory::StreamMemory(const StreamMemory& copy) : Stream(copy)
 	
 	// Copy the buffer and pointer offsets
 	Reallocate( ( ( copy.buffer_used + BUFFER_INCREMENTS ) / BUFFER_INCREMENTS ) * BUFFER_INCREMENTS );
-	memcpy( buffer, copy.buffer, copy.buffer_used );
-	buffer_ptr = buffer + ( copy.buffer_ptr - copy.buffer );	
+	ROCKET_ASSERTMSG(buffer != NULL, "Could not allocate buffer for StreamMemory reader.");
+	if(buffer != NULL)
+	{
+		memcpy( buffer, copy.buffer, copy.buffer_used );
+		buffer_ptr = buffer + ( copy.buffer_ptr - copy.buffer );
+	}
 }
 
 StreamMemory::~StreamMemory() 
@@ -128,7 +132,7 @@ size_t StreamMemory::Read(void *_buffer, size_t bytes) const
 }
 
 // Read bytes from the buffer, not advancing the internal pointer
-size_t StreamMemory::Peek( void *_buffer, size_t bytes ) 
+size_t StreamMemory::Peek( void *_buffer, size_t bytes ) const
 {
 	bytes = Math::ClampUpper(bytes, (size_t) (buffer + buffer_used - buffer_ptr));
 

@@ -27,7 +27,9 @@
 
 #include "precompiled.h"
 #include "DecoratorTiled.h"
-#include <Rocket/Core.h>
+#include "../../Include/Rocket/Core.h"
+#include <vector>
+
 
 namespace Rocket {
 namespace Core {
@@ -107,9 +109,14 @@ Vector2f DecoratorTiled::Tile::GetDimensions(Element* element)
 }
 
 // Generates geometry to render this tile across a surface.
-void DecoratorTiled::Tile::GenerateGeometry(Container::vector< Vertex >::Type& vertices, Container::vector< int >::Type& indices, Element* element, const Vector2f& surface_origin, const Vector2f& surface_dimensions, const Vector2f& tile_dimensions, const Colourb& color_multiplier) const
+void DecoratorTiled::Tile::GenerateGeometry(std::vector< Vertex >& vertices, std::vector< int >& indices, Element* element, const Vector2f& surface_origin, const Vector2f& surface_dimensions, const Vector2f& tile_dimensions, const Colourb& color_multiplier) const
 {
 	RenderInterface* render_interface = element->GetRenderInterface();
+	const Property* element_colour = element->GetProperty(COLOR);
+	Colourb quad_colour = color_multiplier;
+	if (element_colour)
+		quad_colour *= element_colour->Get<Colourb>();
+	
 	TileDataMap::iterator data_iterator = data.find(render_interface);
 	if (data_iterator == data.end())
 		return;
@@ -118,7 +125,6 @@ void DecoratorTiled::Tile::GenerateGeometry(Container::vector< Vertex >::Type& v
 
 	int num_tiles[2];
 	Vector2f final_tile_dimensions;
-	Colourb colour = color_multiplier;
 
 	// Generate the oriented texture coordinates for the tiles.
 	Vector2f scaled_texcoords[3];
@@ -247,9 +253,9 @@ void DecoratorTiled::Tile::GenerateGeometry(Container::vector< Vertex >::Type& v
 			tile_position.x = surface_origin.x + (float) tile_dimensions.x * x;
 			tile_size.x = (float) (x < num_tiles[0] - 1 ? tile_dimensions.x : final_tile_dimensions.x);
 
-			colour.alpha *= element->GetProperty<float>(OPACITY);
+			quad_colour.alpha *= element->GetProperty<float>(OPACITY);
 
-			GeometryUtilities::GenerateQuad(new_vertices, new_indices, tile_position, tile_size, colour, tile_texcoords[0], tile_texcoords[1], index_offset);
+			GeometryUtilities::GenerateQuad(new_vertices, new_indices, tile_position, tile_size, quad_colour, tile_texcoords[0], tile_texcoords[1], index_offset);
 			new_vertices += 4;
 			new_indices += 6;
 			index_offset += 4;

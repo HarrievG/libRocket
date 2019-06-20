@@ -26,10 +26,10 @@
  */
 
 #include "XMLNodeHandlerTabSet.h"
-#include <Rocket/Core/Log.h>
-#include <Rocket/Core/Factory.h>
-#include <Rocket/Core/XMLParser.h>
-#include <Rocket/Controls/ElementTabSet.h>
+#include "../../Include/Rocket/Core/Log.h"
+#include "../../Include/Rocket/Core/Factory.h"
+#include "../../Include/Rocket/Core/XMLParser.h"
+#include "../../Include/Rocket/Controls/ElementTabSet.h"
 
 namespace Rocket {
 namespace Controls {
@@ -57,7 +57,7 @@ Core::Element* XMLNodeHandlerTabSet::ElementStart(Core::XMLParser* parser, const
 
 		// Attempt to instance the tabset
 		Core::Element* element = Core::Factory::InstanceElement(parser->GetParseFrame()->element, name, name, attributes);		
-		ElementTabSet* tabset = dynamic_cast< ElementTabSet* >(element);
+		ElementTabSet* tabset = rocket_dynamic_cast< ElementTabSet* >(element);
 		if (!tabset)
 		{
 			if (element)
@@ -79,7 +79,7 @@ Core::Element* XMLNodeHandlerTabSet::ElementStart(Core::XMLParser* parser, const
 
 		Core::Element* tab_element = Core::Factory::InstanceElement(parser->GetParseFrame()->element, "*", "tab", attributes);
 
-		ElementTabSet* tabset = dynamic_cast< ElementTabSet* >(parser->GetParseFrame()->element);
+		ElementTabSet* tabset = rocket_dynamic_cast< ElementTabSet* >(parser->GetParseFrame()->element);
 		if (tabset)
 		{
 			tabset->SetTab(-1, tab_element);
@@ -96,7 +96,7 @@ Core::Element* XMLNodeHandlerTabSet::ElementStart(Core::XMLParser* parser, const
 
 		Core::Element* panel_element = Core::Factory::InstanceElement(parser->GetParseFrame()->element, "*", "panel", attributes);
 
-		ElementTabSet* tabset = dynamic_cast< ElementTabSet* >(parser->GetParseFrame()->element);
+		ElementTabSet* tabset = rocket_dynamic_cast< ElementTabSet* >(parser->GetParseFrame()->element);
 		if (tabset)
 		{
 			tabset->SetPanel(-1, panel_element);
@@ -129,8 +129,11 @@ Core::Element* XMLNodeHandlerTabSet::ElementStart(Core::XMLParser* parser, const
 	return NULL;
 }
 
-bool XMLNodeHandlerTabSet::ElementEnd(Core::XMLParser* ROCKET_UNUSED(parser), const Rocket::Core::String& ROCKET_UNUSED(name))
+bool XMLNodeHandlerTabSet::ElementEnd(Core::XMLParser* ROCKET_UNUSED_PARAMETER(parser), const Rocket::Core::String& ROCKET_UNUSED_PARAMETER(name))
 {
+	ROCKET_UNUSED(parser);
+	ROCKET_UNUSED(name);
+
 	return true;
 }
 

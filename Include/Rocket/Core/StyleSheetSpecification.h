@@ -28,9 +28,9 @@
 #ifndef ROCKETCORESTYLESHEETSPECIFICATION_H
 #define ROCKETCORESTYLESHEETSPECIFICATION_H
 
-#include <Rocket/Core/Header.h>
-#include <Rocket/Core/PropertySpecification.h>
-#include <Rocket/Core/Types.h>
+#include "Header.h"
+#include "PropertySpecification.h"
+#include "Types.h"
 
 namespace Rocket {
 namespace Core {
@@ -110,7 +110,7 @@ private:
 	void RegisterDefaultProperties();
 
 	// Parsers used by all property definitions.
-	typedef Container::map< String, PropertyParser* >::Type ParserMap;
+	typedef std::map< String, PropertyParser* > ParserMap;
 	ParserMap parsers;
 
 	// The properties defined in the style sheet specification.

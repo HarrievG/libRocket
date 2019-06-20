@@ -25,8 +25,8 @@
  *
  */
 
-#include <Rocket/Controls/ElementFormControlInput.h>
-#include <Rocket/Core/Event.h>
+#include "../../Include/Rocket/Controls/ElementFormControlInput.h"
+#include "../../Include/Rocket/Core/Event.h"
 #include "InputTypeButton.h"
 #include "InputTypeCheckbox.h"
 #include "InputTypeRadio.h"
@@ -36,6 +36,8 @@
 
 namespace Rocket {
 namespace Controls {
+
+ROCKET_RTTI_Implement( ElementFormControlInput )
 
 // Constructs a new ElementFormControlInput.
 ElementFormControlInput::ElementFormControlInput(const Rocket::Core::String& tag) : ElementFormControl(tag)

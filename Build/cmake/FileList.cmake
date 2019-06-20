@@ -37,6 +37,7 @@ set(Core_HDR_FILES
     ${PROJECT_SOURCE_DIR}/Source/Core/FontEffectOutlineInstancer.h
     ${PROJECT_SOURCE_DIR}/Source/Core/FontEffectShadow.h
     ${PROJECT_SOURCE_DIR}/Source/Core/FontEffectShadowInstancer.h
+    ${PROJECT_SOURCE_DIR}/Source/Core/FontFaceHandle.h
     ${PROJECT_SOURCE_DIR}/Source/Core/FontFaceLayer.h
     ${PROJECT_SOURCE_DIR}/Source/Core/GeometryDatabase.h
     ${PROJECT_SOURCE_DIR}/Source/Core/LayoutBlockBox.h
@@ -85,15 +86,19 @@ set(Core_HDR_FILES
     ${PROJECT_SOURCE_DIR}/Source/Core/XMLNodeHandlerHead.h
     ${PROJECT_SOURCE_DIR}/Source/Core/XMLNodeHandlerTemplate.h
     ${PROJECT_SOURCE_DIR}/Source/Core/XMLParseTools.h
+    ${PROJECT_SOURCE_DIR}/Source/Core/BitmapFont/BitmapFontDefinitions.h
     ${PROJECT_SOURCE_DIR}/Source/Core/BitmapFont/BM_Font.h
     ${PROJECT_SOURCE_DIR}/Source/Core/BitmapFont/FontFace.h
     ${PROJECT_SOURCE_DIR}/Source/Core/BitmapFont/FontFaceHandle.h
     ${PROJECT_SOURCE_DIR}/Source/Core/BitmapFont/FontFaceLayer.h
     ${PROJECT_SOURCE_DIR}/Source/Core/BitmapFont/FontFamily.h
     ${PROJECT_SOURCE_DIR}/Source/Core/BitmapFont/FontParser.h
-    ${PROJECT_SOURCE_DIR}/Source/Core/FreeType/FontFace.h
+    ${PROJECT_SOURCE_DIR}/Source/Core/BitmapFont/lacuna_0.h
     ${PROJECT_SOURCE_DIR}/Source/Core/FreeType/FontFaceHandle.h
-    ${PROJECT_SOURCE_DIR}/Source/Core/FreeType/FontFamily.h
+)
+
+set(MASTER_Core_PUB_HDR_FILES
+    ${PROJECT_SOURCE_DIR}/Include/Rocket/Core.h
 )
 
 set(Core_PUB_HDR_FILES
@@ -128,7 +133,8 @@ set(Core_PUB_HDR_FILES
     ${PROJECT_SOURCE_DIR}/Include/Rocket/Core/FontDatabase.h
     ${PROJECT_SOURCE_DIR}/Include/Rocket/Core/FontEffect.h
     ${PROJECT_SOURCE_DIR}/Include/Rocket/Core/FontEffectInstancer.h
-    ${PROJECT_SOURCE_DIR}/Include/Rocket/Core/FontFaceHandle.h
+    ${PROJECT_SOURCE_DIR}/Include/Rocket/Core/FontFace.h
+    ${PROJECT_SOURCE_DIR}/Include/Rocket/Core/FontFamily.h
     ${PROJECT_SOURCE_DIR}/Include/Rocket/Core/FontGlyph.h
     ${PROJECT_SOURCE_DIR}/Include/Rocket/Core/FontProvider.h
     ${PROJECT_SOURCE_DIR}/Include/Rocket/Core/Geometry.h
@@ -170,7 +176,8 @@ set(Core_PUB_HDR_FILES
     ${PROJECT_SOURCE_DIR}/Include/Rocket/Core/XMLParser.h
     ${PROJECT_SOURCE_DIR}/Include/Rocket/Core/BitmapFont/FontProvider.h
     ${PROJECT_SOURCE_DIR}/Include/Rocket/Core/FreeType/FontProvider.h
-    ${PROJECT_SOURCE_DIR}/Include/Rocket/Core.h
+    ${PROJECT_SOURCE_DIR}/Include/Rocket/Core/FreeType/fontstash.h
+    ${PROJECT_SOURCE_DIR}/Include/Rocket/Core/FreeType/stb_truetype.h
 )
 
 set(Core_SRC_FILES
@@ -234,6 +241,7 @@ set(Core_SRC_FILES
     ${PROJECT_SOURCE_DIR}/Source/Core/FontEffectShadowInstancer.cpp
     ${PROJECT_SOURCE_DIR}/Source/Core/FontFaceHandle.cpp
     ${PROJECT_SOURCE_DIR}/Source/Core/FontFaceLayer.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Core/FontProvider.cpp
     ${PROJECT_SOURCE_DIR}/Source/Core/Geometry.cpp
     ${PROJECT_SOURCE_DIR}/Source/Core/GeometryDatabase.cpp
     ${PROJECT_SOURCE_DIR}/Source/Core/GeometryUtilities.cpp
@@ -295,7 +303,6 @@ set(Core_SRC_FILES
     ${PROJECT_SOURCE_DIR}/Source/Core/UnicodeRange.cpp
     ${PROJECT_SOURCE_DIR}/Source/Core/URL.cpp
     ${PROJECT_SOURCE_DIR}/Source/Core/Variant.cpp
-    ${PROJECT_SOURCE_DIR}/Source/Core/Vector2.cpp
     ${PROJECT_SOURCE_DIR}/Source/Core/WidgetSlider.cpp
     ${PROJECT_SOURCE_DIR}/Source/Core/WidgetSliderScroll.cpp
     ${PROJECT_SOURCE_DIR}/Source/Core/WString.cpp
@@ -312,6 +319,7 @@ set(Core_SRC_FILES
     ${PROJECT_SOURCE_DIR}/Source/Core/BitmapFont/FontFamily.cpp
     ${PROJECT_SOURCE_DIR}/Source/Core/BitmapFont/FontParser.cpp
     ${PROJECT_SOURCE_DIR}/Source/Core/BitmapFont/FontProvider.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Core/BitmapFont/lacuna_0.cpp
     ${PROJECT_SOURCE_DIR}/Source/Core/FreeType/FontFace.cpp
     ${PROJECT_SOURCE_DIR}/Source/Core/FreeType/FontFaceHandle.cpp
     ${PROJECT_SOURCE_DIR}/Source/Core/FreeType/FontFamily.cpp
@@ -339,6 +347,10 @@ set(Controls_HDR_FILES
     ${PROJECT_SOURCE_DIR}/Source/Controls/XMLNodeHandlerTextArea.h
 )
 
+set(MASTER_Controls_PUB_HDR_FILES
+    ${PROJECT_SOURCE_DIR}/Include/Rocket/Controls.h
+)
+
 set(Controls_PUB_HDR_FILES
     ${PROJECT_SOURCE_DIR}/Include/Rocket/Controls/Clipboard.h
     ${PROJECT_SOURCE_DIR}/Include/Rocket/Controls/Controls.h
@@ -359,7 +371,6 @@ set(Controls_PUB_HDR_FILES
     ${PROJECT_SOURCE_DIR}/Include/Rocket/Controls/ElementTabSet.h
     ${PROJECT_SOURCE_DIR}/Include/Rocket/Controls/Header.h
     ${PROJECT_SOURCE_DIR}/Include/Rocket/Controls/SelectOption.h
-    ${PROJECT_SOURCE_DIR}/Include/Rocket/Controls.h
 )
 
 set(Controls_SRC_FILES
@@ -416,10 +427,13 @@ set(Debugger_HDR_FILES
     ${PROJECT_SOURCE_DIR}/Source/Debugger/SystemInterface.h
 )
 
+set(MASTER_Debugger_PUB_HDR_FILES
+    ${PROJECT_SOURCE_DIR}/Include/Rocket/Debugger.h
+)
+
 set(Debugger_PUB_HDR_FILES
     ${PROJECT_SOURCE_DIR}/Include/Rocket/Debugger/Debugger.h
     ${PROJECT_SOURCE_DIR}/Include/Rocket/Debugger/Header.h
-    ${PROJECT_SOURCE_DIR}/Include/Rocket/Debugger.h
 )
 
 set(Debugger_SRC_FILES
@@ -438,11 +452,14 @@ set(Ext_HDR_FILES
     ${PROJECT_SOURCE_DIR}/Source/Ext/RocketMenuPlugin.h
 )
 
+set(MASTER_Ext_PUB_HDR_FILES
+    ${PROJECT_SOURCE_DIR}/Include/Rocket/Ext.h
+)
+
 set(Ext_PUB_HDR_FILES
     ${PROJECT_SOURCE_DIR}/Include/Rocket/Ext/ElementProgressBar.h
     ${PROJECT_SOURCE_DIR}/Include/Rocket/Ext/Header.h
     ${PROJECT_SOURCE_DIR}/Include/Rocket/Ext/PluginUtils.h
-    ${PROJECT_SOURCE_DIR}/Include/Rocket/Ext.h
 )
 
 set(Ext_SRC_FILES
@@ -454,13 +471,12 @@ set(Ext_SRC_FILES
     ${PROJECT_SOURCE_DIR}/Source/Ext/RocketMenuPlugin.cpp
 )
 
-set(PyCore_HDR_FILES
+set(Pycore_HDR_FILES
     ${PROJECT_SOURCE_DIR}/Source/Core/Python/ContextDocumentProxy.h
     ${PROJECT_SOURCE_DIR}/Source/Core/Python/ContextInstancer.h
     ${PROJECT_SOURCE_DIR}/Source/Core/Python/ContextInterface.h
     ${PROJECT_SOURCE_DIR}/Source/Core/Python/ContextProxy.h
     ${PROJECT_SOURCE_DIR}/Source/Core/Python/Converters.h
-    ${PROJECT_SOURCE_DIR}/Source/Core/Python/DataSourceWrapper.h
     ${PROJECT_SOURCE_DIR}/Source/Core/Python/ElementAttributeProxy.h
     ${PROJECT_SOURCE_DIR}/Source/Core/Python/ElementChildrenProxy.h
     ${PROJECT_SOURCE_DIR}/Source/Core/Python/ElementDocumentWrapper.h
@@ -475,7 +491,7 @@ set(PyCore_HDR_FILES
     ${PROJECT_SOURCE_DIR}/Source/Core/Python/precompiled.h
 )
 
-set(PyCore_PUB_HDR_FILES
+set(Pycore_PUB_HDR_FILES
     ${PROJECT_SOURCE_DIR}/Include/Rocket/Core/Python/ConverterScriptObject.h
     ${PROJECT_SOURCE_DIR}/Include/Rocket/Core/Python/ElementInstancer.h
     ${PROJECT_SOURCE_DIR}/Include/Rocket/Core/Python/ElementWrapper.h
@@ -489,13 +505,12 @@ set(PyCore_PUB_HDR_FILES
     ${PROJECT_SOURCE_DIR}/Include/Rocket/Core/Python/WrapperIter.h
 )
 
-set(PyCore_SRC_FILES
+set(Pycore_SRC_FILES
     ${PROJECT_SOURCE_DIR}/Source/Core/Python/ContextDocumentProxy.cpp
     ${PROJECT_SOURCE_DIR}/Source/Core/Python/ContextInstancer.cpp
     ${PROJECT_SOURCE_DIR}/Source/Core/Python/ContextInterface.cpp
     ${PROJECT_SOURCE_DIR}/Source/Core/Python/ContextProxy.cpp
     ${PROJECT_SOURCE_DIR}/Source/Core/Python/Converters.cpp
-    ${PROJECT_SOURCE_DIR}/Source/Core/Python/DataSourceWrapper.cpp
     ${PROJECT_SOURCE_DIR}/Source/Core/Python/ElementAttributeProxy.cpp
     ${PROJECT_SOURCE_DIR}/Source/Core/Python/ElementChildrenProxy.cpp
     ${PROJECT_SOURCE_DIR}/Source/Core/Python/ElementDocumentWrapper.cpp
@@ -512,7 +527,7 @@ set(PyCore_SRC_FILES
     ${PROJECT_SOURCE_DIR}/Source/Core/Python/Utilities.cpp
 )
 
-set(PyControls_HDR_FILES
+set(Pycontrols_HDR_FILES
     ${PROJECT_SOURCE_DIR}/Source/Controls/Python/DataFormatterWrapper.h
     ${PROJECT_SOURCE_DIR}/Source/Controls/Python/DataGridRowProxy.h
     ${PROJECT_SOURCE_DIR}/Source/Controls/Python/DataSourceWrapper.h
@@ -522,10 +537,10 @@ set(PyControls_HDR_FILES
     ${PROJECT_SOURCE_DIR}/Source/Controls/Python/SelectOptionProxy.h
 )
 
-set(PyControls_PUB_HDR_FILES
+set(Pycontrols_PUB_HDR_FILES
 )
 
-set(PyControls_SRC_FILES
+set(Pycontrols_SRC_FILES
     ${PROJECT_SOURCE_DIR}/Source/Controls/Python/DataFormatterWrapper.cpp
     ${PROJECT_SOURCE_DIR}/Source/Controls/Python/DataGridRowProxy.cpp
     ${PROJECT_SOURCE_DIR}/Source/Controls/Python/DataSourceWrapper.cpp
@@ -533,5 +548,113 @@ set(PyControls_SRC_FILES
     ${PROJECT_SOURCE_DIR}/Source/Controls/Python/Module.cpp
     ${PROJECT_SOURCE_DIR}/Source/Controls/Python/precompiled.cpp
     ${PROJECT_SOURCE_DIR}/Source/Controls/Python/SelectOptionProxy.cpp
+)
+
+set(LuaCore_HDR_FILES
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/Colourb.h
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/Colourf.h
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/Context.h
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/ContextDocumentsProxy.h
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/Document.h
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/Element.h
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/ElementAttributesProxy.h
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/ElementChildNodesProxy.h
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/ElementInstancer.h
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/ElementStyleProxy.h
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/ElementText.h
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/Event.h
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/EventParametersProxy.h
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/GlobalLuaFunctions.h
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/Log.h
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/LuaDocument.h
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/LuaDocumentElementInstancer.h
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/LuaElement.h
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/LuaElementInstancer.h
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/LuaEventListener.h
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/LuaEventListenerInstancer.h
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/precompiled.h
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/Rocket.h
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/RocketContextsProxy.h
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/Vector2f.h
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/Vector2i.h
+)
+
+set(LuaCore_PUB_HDR_FILES
+    ${PROJECT_SOURCE_DIR}/Include/Rocket/Core/Lua/Header.h
+    ${PROJECT_SOURCE_DIR}/Include/Rocket/Core/Lua/Interpreter.h
+    ${PROJECT_SOURCE_DIR}/Include/Rocket/Core/Lua/LuaType.h
+    ${PROJECT_SOURCE_DIR}/Include/Rocket/Core/Lua/Utilities.h
+)
+
+set(LuaCore_SRC_FILES
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/Colourb.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/Colourf.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/Context.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/ContextDocumentsProxy.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/Document.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/Element.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/ElementAttributesProxy.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/ElementChildNodesProxy.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/ElementInstancer.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/ElementStyleProxy.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/ElementText.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/Event.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/EventParametersProxy.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/GlobalLuaFunctions.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/Interpreter.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/Log.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/LuaDocument.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/LuaDocumentElementInstancer.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/LuaElementInstancer.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/LuaEventListener.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/LuaEventListenerInstancer.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/precompiled.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/Rocket.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/RocketContextsProxy.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/Utilities.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/Vector2f.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Core/Lua/Vector2i.cpp
+)
+
+set(LuaControls_HDR_FILES
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/As.h
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/DataFormatter.h
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/DataSource.h
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/ElementDataGrid.h
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/ElementDataGridRow.h
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/ElementForm.h
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/ElementFormControl.h
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/ElementFormControlDataSelect.h
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/ElementFormControlInput.h
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/ElementFormControlSelect.h
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/ElementFormControlTextArea.h
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/ElementTabSet.h
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/LuaDataFormatter.h
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/LuaDataSource.h
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/precompiled.h
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/SelectOptionsProxy.h
+)
+
+set(LuaControls_PUB_HDR_FILES
+    ${PROJECT_SOURCE_DIR}/Include/Rocket/Controls/Lua/Controls.h
+    ${PROJECT_SOURCE_DIR}/Include/Rocket/Controls/Lua/Header.h
+)
+
+set(LuaControls_SRC_FILES
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/Controls.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/DataFormatter.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/DataSource.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/ElementDataGrid.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/ElementDataGridRow.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/ElementForm.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/ElementFormControl.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/ElementFormControlDataSelect.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/ElementFormControlInput.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/ElementFormControlSelect.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/ElementFormControlTextArea.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/ElementTabSet.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/LuaDataFormatter.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/LuaDataSource.cpp
+    ${PROJECT_SOURCE_DIR}/Source/Controls/Lua/SelectOptionsProxy.cpp
 )
 

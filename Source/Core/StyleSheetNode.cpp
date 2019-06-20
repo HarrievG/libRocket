@@ -27,10 +27,11 @@
 
 #include "precompiled.h"
 #include "StyleSheetNode.h"
-#include <Rocket/Core/ContainerWrapper.h>
-#include <Rocket/Core/Element.h>
 #include "StyleSheetFactory.h"
 #include "StyleSheetNodeSelector.h"
+#include "../../Include/Rocket/Core/Element.h"
+#include <algorithm>
+#include <vector>
 
 namespace Rocket {
 namespace Core {
@@ -308,7 +309,7 @@ bool StyleSheetNode::IsApplicable(const Element* element) const
 	String ancestor_id;
 	StringList ancestor_classes;
 	StringList ancestor_pseudo_classes;
-	Container::vector< const StyleSheetNode* >::Type ancestor_structural_pseudo_classes;
+	std::vector< const StyleSheetNode* > ancestor_structural_pseudo_classes;
 
 	while (parent_node != NULL && parent_node->type != TAG)
 	{
@@ -392,11 +393,12 @@ bool StyleSheetNode::IsApplicable(const Element* element) const
 }
 
 // Appends all applicable non-tag descendants of this node into the given element list.
-void StyleSheetNode::GetApplicableDescendants(Container::vector< const StyleSheetNode* >::Type& applicable_nodes, const Element* element) const
+void StyleSheetNode::GetApplicableDescendants(std::vector< const StyleSheetNode* >& applicable_nodes, const Element* element) const
 {
 	// Check if this node matches this element.
 	switch (type)
 	{
+		ROCKET_UNUSED_SWITCH_ENUM(NUM_NODE_TYPES);
 		case ROOT:
 		case TAG:
 		{

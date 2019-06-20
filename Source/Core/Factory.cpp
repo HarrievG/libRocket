@@ -26,8 +26,8 @@
  */
 
 #include "precompiled.h"
-#include <Rocket/Core.h>
-#include <Rocket/Core/StreamMemory.h>
+#include "../../Include/Rocket/Core.h"
+#include "../../Include/Rocket/Core/StreamMemory.h"
 #include "ContextInstancerDefault.h"
 #include "DecoratorNoneInstancer.h"
 #include "DecoratorAliasInstancer.h"
@@ -46,6 +46,7 @@
 #include "PropertyParserColour.h"
 #include "StreamFile.h"
 #include "StyleSheetFactory.h"
+#include "TemplateCache.h"
 #include "XMLNodeHandlerBody.h"
 #include "XMLNodeHandlerDefault.h"
 #include "XMLNodeHandlerHead.h"
@@ -56,15 +57,15 @@ namespace Rocket {
 namespace Core {
 
 // Element instancers.
-typedef Container::map< String, ElementInstancer* >::Type ElementInstancerMap;
+typedef std::map< String, ElementInstancer* > ElementInstancerMap;
 static ElementInstancerMap element_instancers;
 
 // Decorator instancers.
-typedef Container::map< String, DecoratorInstancer* >::Type DecoratorInstancerMap;
+typedef std::map< String, DecoratorInstancer* > DecoratorInstancerMap;
 static DecoratorInstancerMap decorator_instancers;
 
 // Font effect instancers.
-typedef Container::map< String, FontEffectInstancer* >::Type FontEffectInstancerMap;
+typedef std::map< String, FontEffectInstancer* > FontEffectInstancerMap;
 static FontEffectInstancerMap font_effect_instancers;
 
 // The context instancer.
@@ -453,7 +454,7 @@ FontEffect* Factory::InstanceFontEffect(const String& name, const PropertyDictio
 
 	// Compile an ordered list of the values of the properties used to generate the effect's
 	// textures and geometry.
-	typedef Container::list< Container::pair< String, String >::Type >::Type GenerationPropertyList;
+	typedef std::list< std::pair< String, String > > GenerationPropertyList;
 	GenerationPropertyList generation_properties;
 	for (PropertyMap::const_iterator i = parsed_properties.GetProperties().begin(); i != parsed_properties.GetProperties().end(); ++i)
 	{
@@ -530,6 +531,12 @@ StyleSheet* Factory::InstanceStyleSheetStream(Stream* stream)
 void Factory::ClearStyleSheetCache()
 {
 	StyleSheetFactory::ClearStyleSheetCache();
+}
+
+/// Clears the template cache. This will force templates to be reloaded.
+void Factory::ClearTemplateCache()
+{
+	TemplateCache::Clear();
 }
 
 // Registers an instancer for all RKTEvents

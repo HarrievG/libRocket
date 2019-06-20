@@ -26,8 +26,8 @@
  */
 
 #include "XMLNodeHandlerTextArea.h"
-#include <Rocket/Core.h>
-#include <Rocket/Controls/ElementFormControlTextArea.h>
+#include "../../Include/Rocket/Core.h"
+#include "../../Include/Rocket/Controls/ElementFormControlTextArea.h"
 
 namespace Rocket {
 namespace Controls {
@@ -42,7 +42,7 @@ XMLNodeHandlerTextArea::~XMLNodeHandlerTextArea()
 
 Core::Element* XMLNodeHandlerTextArea::ElementStart(Core::XMLParser* parser, const Rocket::Core::String& name, const Rocket::Core::XMLAttributes& attributes)
 {
-	ElementFormControlTextArea* text_area = dynamic_cast< ElementFormControlTextArea* >(parser->GetParseFrame()->element);
+	ElementFormControlTextArea* text_area = rocket_dynamic_cast< ElementFormControlTextArea* >(parser->GetParseFrame()->element);
 	if (text_area == NULL)
 	{
 		Core::Element* new_element = Core::Factory::InstanceElement(parser->GetParseFrame()->element, name, name, attributes);
@@ -58,14 +58,17 @@ Core::Element* XMLNodeHandlerTextArea::ElementStart(Core::XMLParser* parser, con
 	return NULL;
 }
 
-bool XMLNodeHandlerTextArea::ElementEnd(Core::XMLParser* ROCKET_UNUSED(parser), const Rocket::Core::String& ROCKET_UNUSED(name))
+bool XMLNodeHandlerTextArea::ElementEnd(Core::XMLParser* ROCKET_UNUSED_PARAMETER(parser), const Rocket::Core::String& ROCKET_UNUSED_PARAMETER(name))
 {
+	ROCKET_UNUSED(parser);
+	ROCKET_UNUSED(name);
+
 	return true;
 }
 
 bool XMLNodeHandlerTextArea::ElementData(Core::XMLParser* parser, const Rocket::Core::String& data)
 {
-	ElementFormControlTextArea* text_area = dynamic_cast< ElementFormControlTextArea* >(parser->GetParseFrame()->element);
+	ElementFormControlTextArea* text_area = rocket_dynamic_cast< ElementFormControlTextArea* >(parser->GetParseFrame()->element);
 	if (text_area != NULL)
 	{
 		// Do any necessary translation.

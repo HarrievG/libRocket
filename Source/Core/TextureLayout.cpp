@@ -27,7 +27,6 @@
 
 #include "precompiled.h"
 #include "TextureLayout.h"
-#include <algorithm>
 #include "TextureLayoutRectangle.h"
 #include "TextureLayoutTexture.h"
 

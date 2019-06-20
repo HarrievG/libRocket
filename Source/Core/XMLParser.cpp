@@ -26,15 +26,16 @@
  */
 
 #include "precompiled.h"
-#include <Rocket/Core/XMLParser.h>
+#include "../../Include/Rocket/Core/XMLParser.h"
 #include "DocumentHeader.h"
-#include <Rocket/Core/Log.h>
-#include <Rocket/Core/XMLNodeHandler.h>
+#include "../../Include/Rocket/Core/Log.h"
+#include "../../Include/Rocket/Core/XMLNodeHandler.h"
+#include <map>
 
 namespace Rocket {
 namespace Core {
 
-typedef Container::map< String, XMLNodeHandler* >::Type NodeHandlers;
+typedef std::map< String, XMLNodeHandler* > NodeHandlers;
 static NodeHandlers node_handlers;
 static XMLNodeHandler* default_node_handler = NULL;
 

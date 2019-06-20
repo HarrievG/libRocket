@@ -28,10 +28,10 @@
 #ifndef ROCKETCOREBASEXMLPARSER_H
 #define ROCKETCOREBASEXMLPARSER_H
 
-#include <Rocket/Core/Header.h>
-#include <Rocket/Core/Types.h>
-#include <Rocket/Core/Dictionary.h>
-#include <Rocket/Core/ContainerWrapper.h>
+#include "Header.h"
+#include "Types.h"
+#include "Dictionary.h"
+#include <set>
 
 namespace Rocket {
 namespace Core {
@@ -110,7 +110,7 @@ class ROCKETCORE_API BaseXMLParser
 		// The loose data being read.
 		String data;
 
-		Container::set< String >::Type cdata_tags;
+		std::set< String > cdata_tags;
 };
 
 }

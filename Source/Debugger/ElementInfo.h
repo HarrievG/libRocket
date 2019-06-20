@@ -28,15 +28,15 @@
 #ifndef ROCKETDEBUGGERELEMENTINFO_H
 #define ROCKETDEBUGGERELEMENTINFO_H
 
-#include <Rocket/Core/ElementDocument.h>
-#include <Rocket/Core/EventListener.h>
+#include "../../Include/Rocket/Core/ElementDocument.h"
+#include "../../Include/Rocket/Core/EventListener.h"
 
 namespace Rocket {
 namespace Debugger {
 
-typedef Rocket::Core::Container::pair< Core::String, const Core::Property* >::Type NamedProperty;
-typedef Rocket::Core::Container::vector< NamedProperty >::Type NamedPropertyList;
-typedef Rocket::Core::Container::map< Core::PseudoClassList, NamedPropertyList >::Type NamedPropertyMap;
+typedef std::pair< Core::String, const Core::Property* > NamedProperty;
+typedef std::vector< NamedProperty > NamedPropertyList;
+typedef std::map< Core::PseudoClassList, NamedPropertyList > NamedPropertyMap;
 
 /**
 	@author Robert Curry

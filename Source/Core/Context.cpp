@@ -26,20 +26,21 @@
  */
 
 #include "precompiled.h"
-#include <Rocket/Core.h>
+#include "../../Include/Rocket/Core.h"
+#include "../../Include/Rocket/Core/StreamMemory.h"
 #include "EventDispatcher.h"
 #include "EventIterators.h"
 #include "PluginRegistry.h"
 #include "StreamFile.h"
-#include <Rocket/Core/StreamMemory.h>
-#include <Rocket/Core/ContainerWrapper.h>
+#include <algorithm>
+#include <iterator>
 
 namespace Rocket {
 namespace Core {
 
 const float DOUBLE_CLICK_TIME = 0.5f;
 
-Context::Context(const String& name) : name(name), mouse_position(0, 0), dimensions(0, 0), clip_origin(-1, -1), clip_dimensions(-1, -1)
+Context::Context(const String& name) : name(name), dimensions(0, 0), mouse_position(0, 0), clip_origin(-1, -1), clip_dimensions(-1, -1)
 {
 	instancer = NULL;
 
@@ -300,7 +301,7 @@ void Context::UnloadDocument(ElementDocument* _document)
 	}
 
 	// Remove the item from the focus history.
-	ElementList::iterator itr = Container::find(document_focus_history.begin(), document_focus_history.end(), document);
+	ElementList::iterator itr = std::find(document_focus_history.begin(), document_focus_history.end(), document);
 	if (itr != document_focus_history.end())
 		document_focus_history.erase(itr);
 
@@ -369,7 +370,10 @@ ElementDocument* Context::LoadMouseCursor(const String& document_path)
 	// Load the document from the stream.
 	ElementDocument* document = Factory::InstanceDocumentStream(this, stream);
 	if (document == NULL)
+	{
+		stream->RemoveReference();
 		return NULL;
+	}
 
 	AddMouseCursor(document);
 
@@ -377,6 +381,8 @@ ElementDocument* Context::LoadMouseCursor(const String& document_path)
 	ElementUtilities::BindEventAttributes(document);
 	document->UpdateLayout();
 	document->DispatchEvent(LOAD, Dictionary(), false);
+
+	stream->RemoveReference();
 
 	return document;
 }
@@ -748,7 +754,7 @@ void Context::ProcessMouseButtonUp(int button_index, int key_modifier_state)
 
 		// Unset the 'active' pseudo-class on all the elements in the active chain; because they may not necessarily
 		// have had 'onmouseup' called on them, we can't guarantee this has happened already.
-		Container::for_each(active_chain.begin(), active_chain.end(), PseudoClassFunctor("active", false));
+		std::for_each(active_chain.begin(), active_chain.end(), PseudoClassFunctor("active", false));
 		active_chain.clear();
 
 		if (drag)
@@ -925,7 +931,7 @@ bool Context::OnFocusChange(Element* new_focus)
 	if (old_document != new_document)
 	{
 		// If documents have changed, add the new document to the end of the history
-		ElementList::iterator itr = Container::find(document_focus_history.begin(), document_focus_history.end(), new_document);
+		ElementList::iterator itr = std::find(document_focus_history.begin(), document_focus_history.end(), new_document);
 		if (itr != document_focus_history.end())
 			document_focus_history.erase(itr);
 
@@ -1214,8 +1220,8 @@ void Context::ReleaseUnloadedDocuments()
 void Context::SendEvents(const ElementSet& old_items, const ElementSet& new_items, const String& event, const Dictionary& parameters, bool interruptible)
 {
 	ElementList elements;
-	Container::set_difference(old_items.begin(), old_items.end(), new_items.begin(), new_items.end(), Container::back_inserter(elements));
-	Container::for_each(elements.begin(), elements.end(), RKTEventFunctor(event, parameters, interruptible));
+	std::set_difference(old_items.begin(), old_items.end(), new_items.begin(), new_items.end(), std::back_inserter(elements));
+	std::for_each(elements.begin(), elements.end(), RKTEventFunctor(event, parameters, interruptible));
 }
 
 void Context::OnReferenceDeactivate()

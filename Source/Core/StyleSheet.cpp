@@ -26,15 +26,16 @@
  */
 
 #include "precompiled.h"
-#include <Rocket/Core/StyleSheet.h>
-#include <Rocket/Core/ContainerWrapper.h>
+#include "../../Include/Rocket/Core/StyleSheet.h"
+#include "../../Include/Rocket/Core/Element.h"
+#include "../../Include/Rocket/Core/PropertyDefinition.h"
+#include "../../Include/Rocket/Core/StyleSheetSpecification.h"
 #include "ElementDefinition.h"
 #include "StyleSheetFactory.h"
 #include "StyleSheetNode.h"
 #include "StyleSheetParser.h"
-#include <Rocket/Core/Element.h>
-#include <Rocket/Core/PropertyDefinition.h>
-#include <Rocket/Core/StyleSheetSpecification.h>
+#include <algorithm>
+#include <vector>
 
 namespace Rocket {
 namespace Core {
@@ -116,7 +117,7 @@ ElementDefinition* StyleSheet::GetElementDefinition(const Element* element) cons
 	}
 #endif
 	// See if there are any styles defined for this element.
-	Container::vector< const StyleSheetNode* >::Type applicable_nodes;
+	std::vector< const StyleSheetNode* > applicable_nodes;
 
 	String tags[] = {element->GetTagName(), ""};
 	for (int i = 0; i < 2; i++)
@@ -141,7 +142,7 @@ ElementDefinition* StyleSheet::GetElementDefinition(const Element* element) cons
 		}
 	}
 
-	Container::sort(applicable_nodes.begin(), applicable_nodes.end(), StyleSheetNodeSort);
+	std::sort(applicable_nodes.begin(), applicable_nodes.end(), StyleSheetNodeSort);
 
 	// Compile the list of volatile pseudo-classes for this element definition.
 	PseudoClassList volatile_pseudo_classes;
@@ -162,7 +163,7 @@ ElementDefinition* StyleSheet::GetElementDefinition(const Element* element) cons
 
 				if ((*iterator)->IsApplicable(element))
 				{
-					Container::vector< const StyleSheetNode* >::Type volatile_nodes;
+					std::vector< const StyleSheetNode* > volatile_nodes;
 					(*iterator)->GetApplicableDescendants(volatile_nodes, element);
 
 					for (size_t i = 0; i < volatile_nodes.size(); ++i)
@@ -217,21 +218,27 @@ const PropertyDictionary* StyleSheet::FindDecoratorPropertiesWithId(const String
     if (!node) {
       StyleSheetNode *global = root->GetChildNode("", StyleSheetNode::TAG, false);
       if (global)
-	node = global->GetChildNode(class_name, StyleSheetNode::CLASS, false);
+            node = global->GetChildNode(class_name, StyleSheetNode::CLASS, false);
     }
     if (node) {
-      PropertyGroupMap decorator_definitions;
-      BuildPropertyGroup(decorator_definitions, "decorator", node->GetProperties());
-      for (PropertyGroupMap::const_iterator i=decorator_definitions.begin(); i!=decorator_definitions.end(); ++i) {
-	const PropertyGroup &group = (*i).second;
-	const PropertyMap &props = group.second.GetProperties();
-	PropertyMap::const_iterator deco_id = props.find("decorator-id");
-	if (deco_id != props.end() && (*deco_id).second.ToString() == decorator_id) {
-	  return new PropertyDictionary(group.second);
-	}
-      }
+        // Core::Log::Message(Core::Log::LT_DEBUG, "class %s found", class_name.CString());
+        PropertyGroupMap decorator_definitions;
+        BuildPropertyGroup(decorator_definitions, "decorator", node->GetProperties());
+        for (PropertyGroupMap::const_iterator i=decorator_definitions.begin(); i!=decorator_definitions.end(); ++i) {
+            // Core::Log::Message(Core::Log::LT_DEBUG, " -- group: %s found",(*i).first.CString());
+            const PropertyGroup &group = (*i).second;
+            // Core::Log::Message(Core::Log::LT_DEBUG, "  -- prop: %s", group.first.CString());
+            const PropertyMap &props = group.second.GetProperties();
+            // for (PropertyMap::const_iterator ii=props.begin(); ii!=props.end(); ++ii)
+            //   Core::Log::Message(Core::Log::LT_DEBUG, "   -- value: %s", (*ii).first.CString());
+            PropertyMap::const_iterator deco_id = props.find("decorator-id");
+            if (deco_id != props.end() && (*deco_id).second.ToString() == decorator_id) {
+                // Core::Log::Message(Core::Log::LT_DEBUG, "decorator %s definiton found", decorator_id.CString());
+                return new PropertyDictionary(group.second);
+            }
+        }
     }
-    
+
     return NULL;
 }
 

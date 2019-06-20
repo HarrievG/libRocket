@@ -25,14 +25,16 @@
  *
  */
 
-#include <Rocket/Controls/ElementFormControlTextArea.h>
-#include <Rocket/Core/Math.h>
-#include <Rocket/Core/ElementUtilities.h>
-#include <Rocket/Core/ElementText.h>
+#include "../../Include/Rocket/Controls/ElementFormControlTextArea.h"
+#include "../../Include/Rocket/Core/MathFunc.h"
+#include "../../Include/Rocket/Core/ElementUtilities.h"
+#include "../../Include/Rocket/Core/ElementText.h"
 #include "WidgetTextInputMultiLine.h"
 
 namespace Rocket {
 namespace Controls {
+
+ROCKET_RTTI_Implement( ElementFormControlTextArea )
 
 // Constructs a new ElementFormControlTextArea.
 ElementFormControlTextArea::ElementFormControlTextArea(const Rocket::Core::String& tag) : ElementFormControl(tag)

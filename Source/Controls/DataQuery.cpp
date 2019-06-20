@@ -25,8 +25,8 @@
  *
  */
 
-#include <Rocket/Controls/DataQuery.h>
-#include <Rocket/Controls/DataSource.h>
+#include "../../Include/Rocket/Controls/DataQuery.h"
+#include "../../Include/Rocket/Controls/DataSource.h"
 #include <algorithm>
 
 namespace Rocket {
@@ -40,8 +40,11 @@ class DataQuerySort
 			order_parameters = _order_parameters;
 		}
 
-		bool operator()(const Rocket::Core::StringList& ROCKET_UNUSED(left), const Rocket::Core::StringList& ROCKET_UNUSED(right))
+		bool operator()(const Rocket::Core::StringList& ROCKET_UNUSED_PARAMETER(left), const Rocket::Core::StringList& ROCKET_UNUSED_PARAMETER(right))
 		{
+			ROCKET_UNUSED(left);
+			ROCKET_UNUSED(right);
+
 			return false;
 		}
 
@@ -109,7 +112,7 @@ void DataQuery::ExecuteQuery(DataSource* _data_source, const Rocket::Core::Strin
 		// Now sort the rows, based on the ordering requirements.
 		Rocket::Core::StringList order_parameters;
 		Rocket::Core::StringUtilities::ExpandString(order_parameters, order);
-		sort(rows.begin(), rows.end(), DataQuerySort(order_parameters));
+		std::sort(rows.begin(), rows.end(), DataQuerySort(order_parameters));
 	}
 }
 

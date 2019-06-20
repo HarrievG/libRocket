@@ -27,10 +27,10 @@
 
 #include "precompiled.h"
 #include "ElementDefinition.h"
-#include <Rocket/Core/Decorator.h>
-#include <Rocket/Core/Factory.h>
-#include <Rocket/Core/FontDatabase.h>
-#include <Rocket/Core/Log.h>
+#include "../../Include/Rocket/Core/Decorator.h"
+#include "../../Include/Rocket/Core/Factory.h"
+#include "../../Include/Rocket/Core/FontDatabase.h"
+#include "../../Include/Rocket/Core/Log.h"
 
 namespace Rocket {
 namespace Core {
@@ -405,7 +405,7 @@ void BuildPropertyGroup(PropertyGroupMap& groups, const String& group_type, cons
 }
 
 // Updates a property dictionary of all properties for a single group.
-int BuildPropertyGroupDictionary(PropertyDictionary& group_properties, const String& ROCKET_UNUSED(group_type), const String& group_name, const PropertyDictionary& element_properties)
+int BuildPropertyGroupDictionary(PropertyDictionary& group_properties, const String& ROCKET_UNUSED_PARAMETER(group_type), const String& group_name, const PropertyDictionary& element_properties)
 {
 	int num_properties = 0;
 

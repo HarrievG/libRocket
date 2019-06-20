@@ -27,9 +27,9 @@
 
 #include "precompiled.h"
 #include "TextureResource.h"
-#include <Rocket/Core/FontFaceHandle.h>
 #include "TextureDatabase.h"
-#include <Rocket/Core.h>
+#include "../../Include/Rocket/Core.h"
+#include "../Core/FontFaceHandle.h"
 
 namespace Rocket {
 namespace Core {
@@ -133,15 +133,13 @@ bool TextureResource::Load(RenderInterface* render_interface) const
 
 			FontFaceHandle* handle;
 			FontEffect* layer_id;
-			int layout_id;
 			int texture_id;
 
-			if (sscanf(source.CString(), "?font::%p/%p/%d/%d", &handle, &layer_id, &layout_id, &texture_id) == 4)
+			if (sscanf(source.CString(), "?font::%p/%p/%d", &handle, &layer_id, &texture_id) == 3)
 			{
 				handle->GenerateLayerTexture(data,
 											 dimensions,
 											 layer_id,
-											 layout_id,
 											 texture_id);
 			}
 		}
@@ -164,7 +162,7 @@ bool TextureResource::Load(RenderInterface* render_interface) const
 			else
 			{
 				Log::Message(Log::LT_WARNING, "Failed to generate internal texture %s.", source.CString());
-				texture_data[render_interface] = TextureData(NULL, Vector2i(0, 0));
+				texture_data[render_interface] = TextureData(0, Vector2i(0, 0));
 
 				return false;
 			}
@@ -176,7 +174,7 @@ bool TextureResource::Load(RenderInterface* render_interface) const
 	if (!render_interface->LoadTexture(handle, dimensions, source))
 	{
 		Log::Message(Log::LT_WARNING, "Failed to load texture from %s.", source.CString());
-		texture_data[render_interface] = TextureData(NULL, Vector2i(0, 0));
+		texture_data[render_interface] = TextureData(0, Vector2i(0, 0));
 
 		return false;
 	}

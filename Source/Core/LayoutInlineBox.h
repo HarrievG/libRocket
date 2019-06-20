@@ -28,8 +28,8 @@
 #ifndef ROCKETCORELAYOUTINLINEBOX_H
 #define ROCKETCORELAYOUTINLINEBOX_H
 
-#include <Rocket/Core/ContainerWrapper.h>
-#include <Rocket/Core/Box.h>
+#include "../../Include/Rocket/Core/Box.h"
+#include <vector>
 
 namespace Rocket {
 namespace Core {
@@ -169,7 +169,7 @@ protected:
 	// This inline box's line.
 	LayoutLineBox* line;
 
-	Container::vector< LayoutInlineBox* >::Type children;
+	std::vector< LayoutInlineBox* > children;
 
 	// The next link in our element's chain of inline boxes.
 	LayoutInlineBox* chain;
